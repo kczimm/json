@@ -2,18 +2,29 @@ use std::{fmt, iter::Peekable, str::Chars};
 
 use crate::{error::JsonError, Result};
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum Token {
+    /// `{`
     LeftBrace,
+    /// `}`
     RightBrace,
+    /// `[`
     LeftBracket,
+    /// `]`
     RightBracket,
+    /// `,`
     Comma,
+    /// `:`
     Colon,
+    /// `"quoted string"`
     String(String),
+    /// `-7.7e7`
     Number(f64),
+    /// `true`
     True,
+    /// `false`
     False,
+    /// `null`
     Null,
 }
 
@@ -157,35 +168,9 @@ fn chars_match(chars: &mut Indexer, expected_token: Token) -> Result<Token> {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use crate::value::COMPLETE_JSON;
 
-    static COMPLETE_JSON: &str = r#"{
-    "string": "This is a string",
-    "number": 42,
-    "float": 3.14,
-    "exponential": 2.998e8,
-    "negative": -17,
-    "true": true,
-    "false": false,
-    "null": null,
-    "array": [
-        1,
-        2,
-        "three",
-        4.5,
-        true,
-        null
-    ],
-    "object": {
-        "key1": "value1",
-        "key2": 100,
-        "key3": {
-            "nested": "object"
-        }
-    },
-    "emptyArray": [],
-    "emptyObject": {}
-}"#;
+    use super::*;
 
     #[test]
     fn test_tokenize() {

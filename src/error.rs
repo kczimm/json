@@ -1,6 +1,6 @@
-use std::fmt;
-
 use crate::tokenizer::Token;
+
+pub type Position = (Row, Column);
 
 type Row = usize;
 type Column = usize;
@@ -8,20 +8,14 @@ type Column = usize;
 #[derive(Debug, PartialEq)]
 pub enum JsonError {
     ParsingNumber {
-        position: (Row, Column),
+        position: Position,
         message: String,
     },
     UnexpectedCharacter {
-        position: (Row, Column),
+        position: Position,
         expected_token: Option<Token>,
         got: Option<char>,
     },
-    UnexpectedToken(Token),
+    UnexpectedToken(Option<Token>),
     NoTokens,
-}
-
-impl fmt::Display for JsonError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        todo!()
-    }
 }
